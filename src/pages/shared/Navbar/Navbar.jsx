@@ -1,7 +1,24 @@
 import { Link, NavLink } from "react-router-dom";
 import userDefaultPic from "../../../assets/user.png";
+import { useContext } from "react";
+import { AuthContext } from "../../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    logOut()
+      .then(
+        Swal.fire({
+          icon: "success",
+          title: "Sign out Sucessfully!!",
+          confirmButtonColor: "#403F3F",
+        })
+      )
+      .catch((error) => console.error(error));
+  };
+
   const navLinks = (
     <>
       <li>
@@ -12,6 +29,9 @@ const Navbar = () => {
       </li>
       <li>
         <NavLink to="/career">Career</NavLink>
+      </li>
+      <li>
+        <NavLink to="/login">Login</NavLink>
       </li>
     </>
   );
@@ -51,11 +71,19 @@ const Navbar = () => {
               <img src={userDefaultPic} />
             </div>
           </label>
-          <Link>
-            <button className="btn w-36 rounded-none bg-[#403F3F] text-white text-lg normal-case">
-              Login
+          {user ? (
+            <button
+              onClick={handleSignOut}
+              className="btn btn-neutral btn-sm w-36 rounded-none bg-[#403F3F] text-white text-lg normal-case">
+              Sign Out
             </button>
-          </Link>
+          ) : (
+            <Link to="/login">
+              <button className="btn btn-neutral btn-sm w-36 rounded-none bg-[#403F3F] text-white text-lg normal-case">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </div>
